@@ -71,18 +71,27 @@ def calcularPrecio(tarifa, tiempoDeTrabajo) :
             return tarifa.getSemana() * dif
     #Si los anios son iguales
     elif inicio.year == fin.year :
+        #Si son meses seguidos
         if fin.month - inicio.month == 1 :
+            #cantidad de dias entre las dos fechas
             dias = maxDay(inicio.month,inicio.year) + fin.day - inicio.day 
             #verificar que no se pasa del limite establecido
             if dias <= 7 :
                 dif = math.ceil(24 * dias - inicio.hour + fin.hour)
+                #verificar que no se pasa del limite establecido
                 if dif <= 168 :
                     return tarifa.getSemana() * dif
+    #Si los anios son diferentes
     elif inicio.year != fin.year :
+        #Si el mes de inicio es diciembre y el mes de fin es enero
         if inicio.month == 12 and fin.month == 1 :
+            #cantidad de dias entre las dos fechas
             dias = 31 + fin.day - inicio.day
+            #verificar que no se pasa del limite establecido
             if dias <= 7 :
                 dif = math.ceil(24 * dias - inicio.hour + fin.hour)
+                #verificar que no se pasa del limite establecido
                 if dif <= 168 :
                     return tarifa.getSemana() * dif
+    #Si no trabaja lo suficiente o trabaja de más
     return 0
