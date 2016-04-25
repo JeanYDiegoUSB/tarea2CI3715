@@ -50,73 +50,6 @@ def maxDay(month, year) :
             return 28
 
 '''
-    Funcion para saber cuantas horas son de tipo semana
-    y cuantas son de tipo fin de semana. Recibe 
-    un tiempoInicial y un tiempFinal de tipo datetime
-    y devuelve un arreglo de enteros [horaSemana,horaFinSemana]
-'''
-def tipoHoraMesIgual(inicio,fin):
-    arreglo = [0,0]            #Creando el arreglo [horaSemana,horaFinSemana]
-    
-    #Si los dias no son iguales
-    if inicio.day!=fin.day :
-        #Verifico que dia(si es fin de semana o no) y guardo la cantidad de horas en el espacio 
-        #correspondiente
-        x=inicio.weekday();
-        if(x<=4):     
-            arreglo[0]=24-math.ceil(inicio.hour+(inicio.minute)/100)
-        else:
-            arreglo[1]=24-math.ceil(inicio.hour+(inicio.minute)/100)
-
-        #Veo que dia de la semana es dia siguiente del inicio
-        if x == 6 :
-            x = 0
-        else:
-            x +=1
-        b=1
-        totalDias = fin.day-inicio.day
-
-        # Mientras no he revisado todos los dias que hay entre el dia
-        #siguiente del inicio y el final, voy agregando las horas
-        #de los días, teniendo en cuenta el tipo de día que es.   
-        while(b < totalDias):
-            if x<5 :
-                arreglo[0]+=24
-                x+=1
-            else:
-                arreglo[1]+=24
-                if x==6 :
-                    x=0
-                else:
-                    x+=1
-            b+=1
-
-        #
-        if(fin.weekday()<5):
-            arreglo[0]+=math.ceil(fin.hour+(fin.minute/100))
-        else:
-            arreglo[1]+=math.ceil(fin.hour+(fin.minute/100))
-
-
-    #Si los dias son iguales
-    else:
-        horasTotal=fin.hour-inicio.hour
-        #Se cobra por hora completa
-        if(fin.minute!=0 or inicio.minute!=0):
-            if(inicio.minute!=0):
-                horasTotal+=1
-            if(fin.minute!=0):
-                horasTotal+=1
-
-        if(inicio.weekday()<5):
-            arreglo[0]=horasTotal
-        else:
-            arreglo[1]=horasTotal
-
-
-    return arreglo
-
-'''
     Metodo para calcular el monto a pagar por un trabajo
     dado un objeto Tarifa y un intervalo tiempoDeTrabajo
 '''
@@ -164,13 +97,135 @@ def calcularPrecio(tarifa, tiempoDeTrabajo) :
     #Si no trabaja lo suficiente o trabaja de más
     return 0
 
+'''
+    Funcion para saber cuantas horas son de tipo semana
+    y cuantas son de tipo fin de semana. Recibe 
+    un tiempoInicial y un tiempFinal de tipo datetime
+    y devuelve un arreglo de enteros [horaSemana,horaFinSemana]
+'''
+def tipoHoraMesIgual(inicio,fin):
+    arreglo = [0,0]            #Creando el arreglo [horaSemana,horaFinSemana]
+    
+    #Si los dias no son iguales
+    if inicio.day!=fin.day :
+        #Verifico que dia(si es fin de semana o no) y guardo la cantidad de horas en el espacio 
+        #correspondiente
+        x=inicio.weekday();
+        if(x<=4):     
+            arreglo[0]=24-math.ceil(inicio.hour+(inicio.minute)/100)
+        else:
+            arreglo[1]=24-math.ceil(inicio.hour+(inicio.minute)/100)
+
+        #Veo que dia de la semana es dia siguiente del inicio
+        if x == 6 :
+            x = 0
+        else:
+            x +=1
+        b=1
+        totalDias = fin.day-inicio.day
+
+        # Mientras no he revisado todos los dias que hay entre el dia
+        #siguiente del inicio y el final, voy agregando las horas
+        #de los días, teniendo en cuenta el tipo de día que es.   
+        while(b < totalDias):
+            if x<5 :
+                arreglo[0]+=24
+                x+=1
+            else:
+                arreglo[1]+=24
+                if x==6 :
+                    x=0
+                else:
+                    x+=1
+            b+=1
+
+        #Reviso el ultimo dia
+        if(fin.weekday()<5):
+            arreglo[0]+=math.ceil(fin.hour+(fin.minute/100))
+        else:
+            arreglo[1]+=math.ceil(fin.hour+(fin.minute/100))
+
+
+    #Si los dias son iguales
+    else:
+        horasTotal=fin.hour-inicio.hour
+        #Se cobra por hora completa
+        if(fin.minute!=0 or inicio.minute!=0):
+            if(inicio.minute!=0):
+                horasTotal+=1
+            if(fin.minute!=0):
+                horasTotal+=1
+
+        if(inicio.weekday()<5):
+            arreglo[0]=horasTotal
+        else:
+            arreglo[1]=horasTotal
+
+
+    return arreglo
+
+'''
+    Funcion para saber cuantas horas son de tipo semana
+    y cuantas son de tipo fin de semana. Recibe 
+    un tiempoInicial y un tiempFinal de tipo datetime
+    y devuelve un arreglo de enteros [horaSemana,horaFinSemana]
+'''
+def tipoHoraMesDistintos(inicio,fin):
+    arreglo = [0,0]            #Creando el arreglo [horaSemana,horaFinSemana]
+    maxInit=maxDay(inicio.month,inicio.year)
+    diaFin=maxInit+fin.day
+    totalDias=diaFin-inicio.day
+    #Verifico que dia(si es fin de semana o no) y guardo la cantidad de horas en el espacio 
+    #correspondiente
+    x=inicio.weekday();
+    if(x<=4):     
+        arreglo[0]=24-math.ceil(inicio.hour+(inicio.minute)/100)
+    else:
+        arreglo[1]=24-math.ceil(inicio.hour+(inicio.minute)/100)
+
+
+    #Veo que dia de la semana es el dia siguiente del inicio
+    if x<5:
+        if x==6:
+            x=0
+        else:
+            x+=1
+    else:
+        x+=1
+    b=1;
+
+    # Mientras no he revisado todos los dias que hay entre el dia
+    #siguiente del inicio y el final, voy agregando las horas
+    #de los días, teniendo en cuenta el tipo de día que es.   
+    while(b < totalDias):
+        if x<5 :
+            arreglo[0]+=24
+            x+=1
+        else:
+            arreglo[1]+=24
+            if x==6 :
+                x=0
+            else:
+                x+=1
+        b+=1
+
+    #Reviso el ultimo dia
+    if(fin.weekday()<5):
+            arreglo[0]+=math.ceil(fin.hour+(fin.minute/100))
+        else:
+            arreglo[1]+=math.ceil(fin.hour+(fin.minute/100))
+
+
+
+    return arreglo
+
 
 
 if __name__ == "__main__":
     sem = int(input("Introduzca tarifa de la semana: "))
     finSem = int(input("Introduzca tarifa del fin de semana: "))
     tiempInit= str(input(
-        "Introduzca tiempoDeTrabajo Inicial\nSepare mediante comas\n year,month,day,hour,minutes:  "
+        "Introduzca tiempoDeTrabajo Inicial\nSepare mediante comas\nyear,month,day,hour,minutes:  "
     ))
     tiempFin= str(input(
         "Introduzca tiempoDeTrabajo Final\nSepare mediante comas\nyear,month,day,hour,minutes:  "
@@ -188,7 +243,7 @@ if __name__ == "__main__":
     tarifa = Tarifa(sem,finSem);
     tiempoDeTrabajo=[tiempoWorkInit,tiempoWorkFin]
     
-    c=tipoHoraMesIgual(tiempoWorkInit,tiempoWorkFin)
+    c=tipoHoraMesDistintos(tiempoWorkInit,tiempoWorkFin)
     print("Horas_Sem: "+str(c[0])+" Horas Fin: "+str(c[1]))
    
     print("SALIENDO")
