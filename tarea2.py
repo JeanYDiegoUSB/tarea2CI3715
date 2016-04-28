@@ -15,6 +15,7 @@ class Tarifa(object) :
     def __init__(self,semana,fin) :
         self.semana = semana
         self.fin = fin
+        assert(self.semana>(0.0) and self.fin >(0.0))
 
     #metodo para obtener el valor del campo semana
     def getSemana(self) :
@@ -26,6 +27,7 @@ class Tarifa(object) :
     
     #metodo para ver que tarifa usar
     def cualTarifa(self, fecha) :
+        assert(fecha.weekday()>=0 and fecha.weekday()<7)
         if fecha.weekday() in [0,1,2,3,4] :
             return self.getSemana()
         elif fecha.weekday() in [5,6] :
@@ -35,6 +37,7 @@ class Tarifa(object) :
     Metodo para saber si un anio es bisiesto
 '''
 def bisiesto(year) :
+    assert(year>1 and year<9999)
     if (year % 4 == 0 and year % 100 != 0 or year % 400 == 0) :  
         return True  
     else :  
@@ -61,7 +64,7 @@ def maxDay(month, year) :
 '''
 def calcularPrecio(tarifa, tiempoDeTrabajo) :
     inicio,fin = tiempoDeTrabajo[0],tiempoDeTrabajo[1] # fechas de inicio y fin del trabajo
-    monto = 0
+    monto = 0.0
     #Si los anios, meses y dias son iguales
     if inicio.year == fin.year and inicio.month == fin.month and inicio.day == fin.day :
         #diferencia entre los horarios
