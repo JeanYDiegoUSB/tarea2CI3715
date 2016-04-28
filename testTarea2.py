@@ -9,6 +9,19 @@ from datetime import datetime
 import unittest
 
 class Tarea2Tester(unittest.TestCase):
+    def testUnaTarifaNegativaSemana(self):
+        self.assertRaises(AssertionError,tarea2.Tarifa,-20,None)
+    def testUnaTarifaNegativaFinDe(self):
+        self.assertRaises(AssertionError,tarea2.Tarifa,20, -40)
+    def testAmbasTarifasNegativas(self):
+        self.assertRaises(AssertionError,tarea2.Tarifa,-20, -40)
+    def testEnBisiestoNumeroNegativo(self):
+        self.assertRaises(AssertionError,tarea2.bisiesto,-1)
+    def testFechaInicioMayorFechaFinal(self):
+        tarifa = tarea2.Tarifa(20,40)
+        i,f=datetime(2016,5,5,0,0),datetime(2016,4,28,0,0)
+        monto=tarea2.calcularPrecio(tarifa,[i,f])
+        self.assertEqual(0,monto)
     def testSieteDiasExactos(self):
         tarifa = tarea2.Tarifa(20,40)
         i,f=datetime(2016,4,28,0,0),datetime(2016,5,5,0,0)
@@ -34,6 +47,16 @@ class Tarea2Tester(unittest.TestCase):
         i,f=datetime(2016,5,5,0,0),datetime(2016,5,5,0,10)
         monto=tarea2.calcularPrecio(tarifa,[i,f])
         self.assertEqual(0,monto)
+    def testQuinceMinutosEntreViernesYSabado(self):
+        tarifa = tarea2.Tarifa(20,40)
+        i,f=datetime(2016,4,8,23,53),datetime(2016,4,9,0,8)
+        monto=tarea2.calcularPrecio(tarifa,[i,f])
+        self.assertEqual(60,monto)
+    def testQuinceMinutosEntreDomingoYLunes(self):
+        tarifa = tarea2.Tarifa(20,40)
+        i,f=datetime(2016,4,10,23,53),datetime(2016,4,11,0,8)
+        monto=tarea2.calcularPrecio(tarifa,[i,f])
+        self.assertEqual(60,monto)
     def testSieteDiasYUnMinuto(self):
         tarifa = tarea2.Tarifa(20,40)
         i,f=datetime(2016,4,28,0,0),datetime(2016,5,5,0,1)
@@ -59,6 +82,12 @@ class Tarea2Tester(unittest.TestCase):
         i,f=datetime(2015,12,31,23,40),datetime(2016,1,1,0,0)
         monto=tarea2.calcularPrecio(tarifa,[i,f])
         self.assertEqual(1,monto)
+    def testCeroMinutos(self):
+        tarifa = tarea2.Tarifa(1,2)
+        i,f=datetime(2016,5,2,23,0),datetime(2016,5,2,23,0)
+        monto=tarea2.calcularPrecio(tarifa,[i,f])
+        self.assertEqual(0,monto)
+
 
 
 
